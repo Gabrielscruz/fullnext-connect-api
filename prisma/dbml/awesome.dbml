@@ -2,13 +2,6 @@
 //// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 //// ------------------------------------------------------
 
-Table PasswordReset {
-  id String [pk]
-  email String [unique, not null]
-  codigo String [not null]
-  expiresAt DateTime [not null]
-}
-
 Table translate {
   id Int [pk, increment]
   language String [not null]
@@ -211,6 +204,13 @@ Table Filter {
   menuLinkId Int [not null]
   instruction String [not null]
   menuLink MenuLink [not null]
+}
+
+Table PasswordReset {
+  id String [pk]
+  email String [unique, not null]
+  codigo String [not null]
+  expiresAt DateTime [not null]
 }
 
 Ref: OrganizationStyle.organizationId > Organization.id

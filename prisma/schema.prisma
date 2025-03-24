@@ -15,16 +15,6 @@ generator dbml {
   outputName = "awesome.dbml"
 }
 
-model PasswordReset {
-  id          String   @id @default(uuid())
-  email       String   @unique
-  codigo      String
-  expiresAt   DateTime
-
-  @@map("PasswordReset")
-  @@schema("public")
-}
-
 // base traslate 
 model Translate {
   id        Int    @id @default(autoincrement())
@@ -277,5 +267,16 @@ model Filter {
   instruction String
   menuLink    MenuLink @relation(fields: [menuLinkId], references: [id])
 
+  @@schema("public")
+}
+
+model PasswordReset {
+  id          String   @id @default(uuid())
+  email       String   @unique
+  codigo      String
+  expiresAt   DateTime
+
+  
+  @@map("PasswordReset")
   @@schema("public")
 }
