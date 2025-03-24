@@ -81,11 +81,11 @@ export const resetPassword = async (
 
     const code = Math.floor(1000 + Math.random() * 9000);
 
-    const passwordReset = await prisma.passwordReset.findFirst({
+    const passwordExist = await prisma.passwordReset.findFirst({
       where: { email },
     });
 
-    if (passwordReset) {
+    if (passwordExist) {
       await prisma.passwordReset.delete({
         where: {
           email,
