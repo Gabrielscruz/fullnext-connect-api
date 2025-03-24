@@ -1,14 +1,4 @@
 -- CreateTable
-CREATE TABLE "public"."PasswordReset" (
-    "id" TEXT NOT NULL,
-    "email" TEXT NOT NULL,
-    "codigo" TEXT NOT NULL,
-    "expiresAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "PasswordReset_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "public"."translate" (
     "id" SERIAL NOT NULL,
     "language" TEXT NOT NULL,
@@ -241,8 +231,15 @@ CREATE TABLE "public"."Filter" (
     CONSTRAINT "Filter_pkey" PRIMARY KEY ("id")
 );
 
--- CreateIndex
-CREATE UNIQUE INDEX "PasswordReset_email_key" ON "public"."PasswordReset"("email");
+-- CreateTable
+CREATE TABLE "public"."PasswordReset" (
+    "id" SERIAL NOT NULL,
+    "email" TEXT NOT NULL,
+    "codigo" TEXT NOT NULL,
+    "expiresAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "PasswordReset_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Organization_name_key" ON "public"."Organization"("name");
@@ -258,6 +255,9 @@ CREATE UNIQUE INDEX "Subscription_subscriptionId_key" ON "public"."Subscription"
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "public"."User"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "PasswordReset_email_key" ON "public"."PasswordReset"("email");
 
 -- AddForeignKey
 ALTER TABLE "public"."OrganizationStyle" ADD CONSTRAINT "OrganizationStyle_organizationId_fkey" FOREIGN KEY ("organizationId") REFERENCES "public"."Organization"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

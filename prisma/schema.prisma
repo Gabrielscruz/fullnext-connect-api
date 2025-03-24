@@ -271,10 +271,10 @@ model Filter {
 }
 
 model PasswordReset {
-  id          String   @id @default(uuid())
-  email       String   @unique
-  codigo      String
-  expiresAt   DateTime
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  codigo    String
+  expiresAt DateTime
 
   @@schema("public")
 }

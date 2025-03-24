@@ -207,7 +207,7 @@ Table Filter {
 }
 
 Table PasswordReset {
-  id String [pk]
+  id Int [pk, increment]
   email String [unique, not null]
   codigo String [not null]
   expiresAt DateTime [not null]
