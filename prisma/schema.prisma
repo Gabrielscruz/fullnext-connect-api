@@ -276,7 +276,5 @@ model PasswordReset {
   codigo      String
   expiresAt   DateTime
 
-  
-  @@map("PasswordReset")
   @@schema("public")
 }
