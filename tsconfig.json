@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist", // Pasta de saída dos arquivos compilados
+    "rootDir": "./src", // Pasta onde estão os arquivos TypeScript
+    "target": "ES2022",
+    "module": "commonjs",
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "jsx": "react-jsx",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "removeComments": true,
+    "resolveJsonModule": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
+  }
+}

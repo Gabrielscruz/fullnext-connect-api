@@ -1,0 +1,242 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table PasswordReset {
+  id String [pk]
+  email String [unique, not null]
+  codigo String [not null]
+  expiresAt DateTime [not null]
+}
+
+Table translate {
+  id Int [pk, increment]
+  language String [not null]
+  text String [not null]
+  translate String [not null]
+}
+
+Table Invite {
+  id String [pk]
+  email String [not null]
+  token String [not null]
+  tenant String [not null]
+}
+
+Table Organization {
+  id Int [pk, increment]
+  name String [unique, not null]
+  ownerName String [not null]
+  ownerEmail String [unique, not null]
+  channels Json [not null]
+  industries Json [not null]
+  isActive Boolean [not null, default: true]
+  trialEndDate DateTime
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  payments Payment [not null]
+  styles OrganizationStyle [not null]
+}
+
+Table OrganizationStyle {
+  id Int [pk, increment]
+  organization Organization [not null]
+  organizationId Int [not null]
+  primaryColor String [not null]
+  secondaryColor String [not null]
+  logoUrl String [not null]
+  css String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Payment {
+  id Int [pk, increment]
+  organization Organization [not null]
+  organizationId Int [not null]
+  amount Float [not null]
+  currency String [not null, default: 'BRL']
+  paymentDate DateTime [default: `now()`, not null]
+  status String [not null]
+  subscriptionId String
+  customerId String
+  priceId String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Customer {
+  id Int [pk, increment]
+  customerId String [unique, not null]
+  email String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  subscriptions Subscription [not null]
+}
+
+Table Subscription {
+  id Int [pk, increment]
+  subscriptionId String [unique, not null]
+  customerId String [not null]
+  email String [not null]
+  status String [not null]
+  priceId String [not null]
+  amount Float [not null]
+  currency String [not null]
+  collectionMethod String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  expirationDate DateTime [not null]
+  customer Customer [not null]
+}
+
+Table User {
+  id Int [pk, increment]
+  name String [not null]
+  email String [unique, not null]
+  passwordHash String [not null]
+  profileUrl String
+  admin Boolean [not null, default: false]
+  firstAccess Boolean [not null, default: true]
+  dateOfBirth DateTime [not null]
+  about String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  accessControlId Int [not null, default: 1]
+  accessControl AccessControl [not null]
+  FavoriteLink FavoriteLink [not null]
+  RecentAccess RecentAccess [not null]
+}
+
+Table Module {
+  id Int [pk, increment]
+  title String [not null]
+  defaultIcon String [not null]
+  activeIcon String [not null]
+  MenuLink MenuLink [not null]
+}
+
+Table PowerBiCredential {
+  id Int [pk, increment]
+  name String [not null]
+  clientId String [not null]
+  clientSecret String [not null]
+  tenantId String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  createdAtUserId Int [not null]
+  updatedAt DateTime [not null]
+  updatedAtUserId Int
+  MenuLink MenuLink [not null]
+}
+
+Table MenuLinkType {
+  id Int [pk, increment]
+  name String [not null]
+  MenuLink MenuLink [not null]
+}
+
+Table MenuLink {
+  id Int [pk, increment]
+  label String [not null]
+  href String [not null]
+  defaultIcon String [not null]
+  activeIcon String [not null]
+  type Int [not null, default: 1]
+  order Int [not null]
+  moduleId Int [not null, default: 1]
+  powerBiCredentialId Int [not null, default: 1]
+  module Module [not null]
+  menuLinkType MenuLinkType [not null]
+  powerBiCredential PowerBiCredential [not null]
+  AccessControlLink AccessControlLink [not null]
+  FavoriteLink FavoriteLink [not null]
+  RecentAccess RecentAccess [not null]
+  Filter Filter [not null]
+}
+
+Table AccessControl {
+  id Int [pk, increment]
+  name String [not null]
+  users User [not null]
+  accessLinks AccessControlLink [not null]
+}
+
+Table Feedback {
+  id Int [pk, increment]
+  type String [not null]
+  title String [not null]
+  comment String [not null]
+  url String
+  createdAt DateTime [default: `now()`, not null]
+  createdAtUserId Int [not null]
+}
+
+Table AccessControlLink {
+  id Int [pk, increment]
+  accessControlId Int [not null]
+  menuLinkId Int [not null]
+  accessControl AccessControl [not null]
+  menuLink MenuLink [not null]
+}
+
+Table FavoriteLink {
+  id Int [pk, increment]
+  userId Int [not null]
+  menuLinkId Int [not null]
+  query String [not null]
+  favoritedAt DateTime [default: `now()`, not null]
+  menuLink MenuLink [not null]
+  user User [not null]
+}
+
+Table RecentAccess {
+  id Int [pk, increment]
+  userId Int [not null]
+  menuLinkId Int [not null]
+  query String [not null]
+  favoritedAt DateTime [default: `now()`, not null]
+  menuLink MenuLink [not null]
+  user User [not null]
+}
+
+Table UserLinkUsage {
+  id Int [pk, increment]
+  createdAt DateTime [default: `now()`, not null]
+  userId Int [not null]
+  ip String [not null]
+  menuLinkId Int [not null]
+  duration Int [not null]
+}
+
+Table Filter {
+  id Int [pk, increment]
+  menuLinkId Int [not null]
+  instruction String [not null]
+  menuLink MenuLink [not null]
+}
+
+Ref: OrganizationStyle.organizationId > Organization.id
+
+Ref: Payment.organizationId > Organization.id
+
+Ref: Subscription.customerId > Customer.customerId
+
+Ref: User.accessControlId > AccessControl.id
+
+Ref: MenuLink.moduleId > Module.id
+
+Ref: MenuLink.type > MenuLinkType.id
+
+Ref: MenuLink.powerBiCredentialId > PowerBiCredential.id
+
+Ref: AccessControlLink.accessControlId > AccessControl.id
+
+Ref: AccessControlLink.menuLinkId > MenuLink.id
+
+Ref: FavoriteLink.menuLinkId > MenuLink.id
+
+Ref: FavoriteLink.userId > User.id
+
+Ref: RecentAccess.menuLinkId > MenuLink.id
+
+Ref: RecentAccess.userId > User.id
+
+Ref: Filter.menuLinkId > MenuLink.id

@@ -1,0 +1,281 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  schemas  = ["public"]
+}
+
+generator dbml {
+  provider   = "prisma-dbml-generator"
+  output     = "./dbml"
+  outputName = "awesome.dbml"
+}
+
+model PasswordReset {
+  id          String   @id @default(uuid())
+  email       String   @unique
+  codigo      String
+  expiresAt   DateTime
+
+  @@map("PasswordReset")
+  @@schema("public")
+}
+
+// base traslate 
+model Translate {
+  id        Int    @id @default(autoincrement())
+  language  String
+  text      String
+  translate String
+
+  @@map("translate")
+  @@schema("public")
+}
+
+model Invite {
+  id     String @id @default(uuid())
+  email  String
+  token  String
+  tenant String
+
+  @@map("Invite")
+  @@schema("public")
+}
+
+// fullnext_management
+model Organization {
+  id           Int                 @id @default(autoincrement())
+  name         String              @unique
+  ownerName    String
+  ownerEmail   String              @unique
+  channels     Json
+  industries   Json
+  isActive     Boolean             @default(true)
+  trialEndDate DateTime?
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+  payments     Payment[]
+  styles       OrganizationStyle[]
+
+  @@map("Organization")
+  @@schema("public")
+}
+
+// Tabela de Estilização
+model OrganizationStyle {
+  id             Int          @id @default(autoincrement())
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId Int
+  primaryColor   String
+  secondaryColor String
+  logoUrl        String
+  css            String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@map("OrganizationStyle")
+  @@schema("public")
+}
+
+// Tabela de Pagamentos
+model Payment {
+  id             Int          @id @default(autoincrement())
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId Int
+  amount         Float
+  currency       String       @default("BRL")
+  paymentDate    DateTime     @default(now())
+  status         String // exemplo: "pending", "completed", "failed"
+  subscriptionId String?
+  customerId     String?
+  priceId        String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@map("Payment")
+  @@schema("public")
+}
+
+model Customer {
+  id            Int            @id @default(autoincrement())
+  customerId    String         @unique
+  email         String
+  createdAt     DateTime       @default(now())
+  subscriptions Subscription[]
+
+  @@map("Customer")
+  @@schema("public")
+}
+
+model Subscription {
+  id               Int      @id @default(autoincrement())
+  subscriptionId   String   @unique
+  customerId       String
+  email            String
+  status           String
+  priceId          String
+  amount           Float
+  currency         String
+  collectionMethod String
+  createdAt        DateTime @default(now())
+  expirationDate   DateTime
+
+  customer Customer @relation(fields: [customerId], references: [customerId])
+
+  @@map("Subscription")
+  @@schema("public")
+}
+
+// Aplicação po tenantId
+model User {
+  id              Int            @id @default(autoincrement())
+  name            String
+  email           String         @unique
+  passwordHash    String
+  profileUrl      String?
+  admin           Boolean        @default(false)
+  firstAccess     Boolean        @default(true)
+  dateOfBirth     DateTime       @db.Date
+  about           String
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  accessControlId Int            @default(1)
+  accessControl   AccessControl  @relation(fields: [accessControlId], references: [id])
+  FavoriteLink    FavoriteLink[]
+  RecentAccess    RecentAccess[]
+
+  @@schema("public")
+}
+
+model Module {
+  id          Int        @id @default(autoincrement())
+  title       String
+  defaultIcon String
+  activeIcon  String
+  MenuLink    MenuLink[]
+
+  @@schema("public")
+}
+
+model PowerBiCredential {
+  id              Int        @id @default(autoincrement())
+  name            String
+  clientId        String
+  clientSecret    String
+  tenantId        String
+  createdAt       DateTime   @default(now())
+  createdAtUserId Int
+  updatedAt       DateTime   @updatedAt
+  updatedAtUserId Int?
+  MenuLink        MenuLink[]
+
+  @@schema("public")
+}
+
+model MenuLinkType {
+  id       Int        @id @default(autoincrement())
+  name     String
+  MenuLink MenuLink[]
+
+  @@schema("public")
+}
+
+model MenuLink {
+  id                  Int                 @id @default(autoincrement())
+  label               String
+  href                String
+  defaultIcon         String
+  activeIcon          String
+  type                Int                 @default(1)
+  order               Int
+  moduleId            Int                 @default(1)
+  powerBiCredentialId Int                 @default(1)
+  module              Module              @relation(fields: [moduleId], references: [id])
+  menuLinkType        MenuLinkType        @relation(fields: [type], references: [id])
+  powerBiCredential   PowerBiCredential   @relation(fields: [powerBiCredentialId], references: [id])
+  AccessControlLink   AccessControlLink[]
+  FavoriteLink        FavoriteLink[]
+  RecentAccess        RecentAccess[]
+  Filter              Filter[]
+
+  @@schema("public")
+}
+
+model AccessControl {
+  id          Int                 @id @default(autoincrement())
+  name        String
+  users       User[]
+  accessLinks AccessControlLink[]
+
+  @@schema("public")
+}
+
+model Feedback {
+  id              Int      @id @default(autoincrement())
+  type            String
+  title           String
+  comment         String
+  url             String?
+  createdAt       DateTime @default(now())
+  createdAtUserId Int
+
+  @@schema("public")
+}
+
+model AccessControlLink {
+  id              Int           @id @default(autoincrement())
+  accessControlId Int
+  menuLinkId      Int
+  accessControl   AccessControl @relation(fields: [accessControlId], references: [id])
+  menuLink        MenuLink      @relation(fields: [menuLinkId], references: [id])
+
+  @@schema("public")
+}
+
+model FavoriteLink {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  menuLinkId  Int
+  query       String
+  favoritedAt DateTime @default(now())
+  menuLink    MenuLink @relation(fields: [menuLinkId], references: [id])
+  user        User     @relation(fields: [userId], references: [id])
+
+  @@schema("public")
+}
+
+model RecentAccess {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  menuLinkId  Int
+  query       String
+  favoritedAt DateTime @default(now())
+  menuLink    MenuLink @relation(fields: [menuLinkId], references: [id])
+  user        User     @relation(fields: [userId], references: [id])
+
+  @@schema("public")
+}
+
+model UserLinkUsage {
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now())
+  userId     Int
+  ip         String
+  menuLinkId Int
+  duration   Int
+
+  @@schema("public")
+}
+
+model Filter {
+  id          Int      @id @default(autoincrement())
+  menuLinkId  Int
+  instruction String
+  menuLink    MenuLink @relation(fields: [menuLinkId], references: [id])
+
+  @@schema("public")
+}
