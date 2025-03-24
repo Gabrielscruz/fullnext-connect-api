@@ -1,0 +1,1 @@
+{"version":3,"file":"reportUsageRoutes.js","sourceRoot":"","sources":["../../src/routes/reportUsageRoutes.ts"],"names":[],"mappings":";;AAGA,8CAKC;AAPD,kFAA0E;AAEnE,KAAK,UAAU,iBAAiB,CAAC,GAAoB;IACxD,GAAG,CAAC,OAAO,CAAC,YAAY,EAAE,KAAK,EAAE,OAAY,EAAE,EAAE;QAC/C,MAAM,OAAO,CAAC,SAAS,EAAE,CAAC;IAC5B,CAAC,CAAC,CAAC;IACH,GAAG,CAAC,GAAG,CAAC,eAAe,EAAE,0CAAiB,CAAC,CAAA;AAC/C,CAAC"}
