@@ -59,9 +59,9 @@ export const newOrganization = async (tenant: string, user: any) => {
                     {
                         id: 2,
                         name: "Power BI Credentials",
-                        clientId: "00559767-be1b-43a5-b01f-52583f4a4023",
-                        clientSecret: "WQ48Q~GTaEqv58SwIhL8G8n-dLWJoy9FC8eQ0dsp",
-                        tenantId: "8e3491d7-4c96-47da-8618-6ee44b55c955",
+                        clientId: "b06750b5-2870-4ad6-a752-31f5bb93a05e",
+                        clientSecret: "e248ddf2-e2ea-4762-b139-c2a97eff7e7a",
+                        tenantId: "ea76e4ac-fa19-4319-abf0-a9b60980dc4b",
                         createdAtUserId: 1,
                     },
                     {
